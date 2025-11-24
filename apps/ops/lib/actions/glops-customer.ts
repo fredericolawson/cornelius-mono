@@ -4,13 +4,13 @@ import { mapCustomer, mapOrder, mapShipment } from "@/lib/utils/glops-map";
 import { listRecords, base } from "@/lib/actions/airtable";
 
 export async function getCustomerData(email: string) {
+  console.log("email", email);
   const customerRecords = await base("Customers")
     .select({
-      filterByFormula: `{Email | DEV} = '${email}'`,
+      filterByFormula: `{Email | DEV} = '${email.toLowerCase()}'`,
     })
     .all();
 
-  // console.log("customerRecords", customerRecords);
   if (customerRecords.length === 0) {
     return { customer: null, orders: [], shipments: [] };
   }

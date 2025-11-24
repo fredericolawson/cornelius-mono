@@ -76,7 +76,12 @@ export default function CustomerPage() {
   }
 
   if (!data || !data.customer) {
-    return <Message title="No customer" description="No customer data found" />;
+    return (
+      <Message
+        title="No customer"
+        description={`No customer data found for email ${email}`}
+      />
+    );
   }
 
   return <CustomerData data={data} />;
