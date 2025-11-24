@@ -12,7 +12,7 @@ export async function getCustomerData(email: string) {
 
   // console.log("customerRecords", customerRecords);
   if (customerRecords.length === 0) {
-    throw new Error("No customer found");
+    return { customer: null, orders: [], shipments: [] };
   }
 
   const customer = mapCustomer(customerRecords[0]!);
