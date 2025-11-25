@@ -1,6 +1,8 @@
 export interface MissiveFromField {
-  address: string;
+  address?: string;
   name?: string;
+  username?: string;
+  phone_number?: string;
 }
 
 export interface MissiveMessage {
@@ -13,6 +15,7 @@ export interface MissiveMessage {
 export interface MissiveConversation {
   id: string;
   latest_message?: MissiveMessage;
+  messages?: MissiveMessage[];
   subject?: string;
 }
 

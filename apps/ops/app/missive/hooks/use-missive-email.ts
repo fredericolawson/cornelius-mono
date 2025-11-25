@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 
 export function useMissiveEmail() {
   const [email, setEmail] = useState<string | undefined>();
+  const [phoneNumber, setPhoneNumber] = useState<string | undefined>();
+  const [contactName, setContactName] = useState<string | undefined>();
   const [loading, setLoading] = useState(true);
   const [missiveError, setMissiveError] = useState<string | null>(null);
 
@@ -23,6 +25,8 @@ export function useMissiveEmail() {
           ids?.length || 0
         );
         setEmail(undefined);
+        setPhoneNumber(undefined);
+        setContactName(undefined);
         return;
       }
 
@@ -35,18 +39,45 @@ export function useMissiveEmail() {
         .then((conversations) => {
           if (!mounted) return;
 
-          const senderEmail =
-            conversations[0]?.latest_message?.from_field?.address;
+          const firstMessage = conversations[0]?.messages?.[0];
+          const fromField = firstMessage?.from_field;
 
-          if (senderEmail) {
-            console.log("[useEmail] Setting email to:", senderEmail);
-            setEmail(senderEmail);
-          } else {
-            console.log("[useEmail] No senderEmail found in conversation");
+          console.log("conversations", conversations);
+          console.log("firstMessage", firstMessage);
+          console.log("fromField", fromField);
+
+          if (!fromField) {
+            console.log("[useEmail] No from_field found in first message");
             setEmail(undefined);
+            setPhoneNumber(undefined);
+            setContactName(undefined);
+            return;
           }
 
-          console.log("senderEmail", senderEmail);
+          // Extract email (for email conversations)
+          if (fromField.address) {
+            console.log("[useEmail] Setting email to:", fromField.address);
+            setEmail(fromField.address);
+            setPhoneNumber(undefined);
+          }
+          // Extract phone number (for WhatsApp conversations)
+          else if (fromField.phone_number) {
+            console.log("[useEmail] Setting phone to:", fromField.phone_number);
+            setPhoneNumber(fromField.phone_number);
+            setEmail(undefined);
+          } else {
+            console.log("[useEmail] No email or phone found in from_field");
+            setEmail(undefined);
+            setPhoneNumber(undefined);
+          }
+
+          // Extract contact name (available for both types)
+          if (fromField.name) {
+            console.log("[useEmail] Setting contact name to:", fromField.name);
+            setContactName(fromField.name);
+          } else {
+            setContactName(undefined);
+          }
         })
         .catch((err: unknown) => {
           if (!mounted) return;
@@ -118,5 +149,5 @@ export function useMissiveEmail() {
     };
   }, []);
 
-  return { email, loading, missiveError };
+  return { email, phoneNumber, contactName, loading, missiveError };
 }

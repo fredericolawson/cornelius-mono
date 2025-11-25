@@ -14,19 +14,19 @@ import { getCustomerData } from "@/lib/actions/glops-customer";
 import { useMissiveEmail } from "@/app/missive/hooks/use-missive-email";
 
 export default function CustomerPage() {
-  const { email, missiveError, loading: missiveLoading } = useMissiveEmail();
+  const { email, phoneNumber, contactName, missiveError, loading: missiveLoading } = useMissiveEmail();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Data | null>(null);
 
   useEffect(() => {
-    console.log("[CustomerPage] useEffect triggered with email:", email);
+    console.log("[CustomerPage] useEffect triggered with email:", email, "phone:", phoneNumber);
     async function fetchData() {
-      if (!email) return;
+      if (!email && !phoneNumber) return;
       setLoading(true);
       setError(null);
       try {
-        const data = await getCustomerData(email);
+        const data = await getCustomerData({ email, phoneNumber });
         setData(data as Data);
         setLoading(false);
       } catch (err) {
@@ -35,7 +35,7 @@ export default function CustomerPage() {
       }
     }
     fetchData();
-  }, [email]);
+  }, [email, phoneNumber]);
 
   if (missiveError) {
     return (
@@ -55,7 +55,7 @@ export default function CustomerPage() {
     );
   }
 
-  if (!email) {
+  if (!email && !phoneNumber) {
     return (
       <Message
         title="No conversation selected"
@@ -77,10 +77,12 @@ export default function CustomerPage() {
   }
 
   if (!data || !data.customer) {
+    const identifier = email || phoneNumber || "unknown contact";
+    const identifierType = email ? "email" : "phone number";
     return (
       <Message
         title="No customer"
-        description={`No customer data found for email ${email}`}
+        description={`No customer data found for ${identifierType} ${identifier}`}
       />
     );
   }
