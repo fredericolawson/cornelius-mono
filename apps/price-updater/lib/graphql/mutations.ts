@@ -1,7 +1,10 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const UPDATE_VARIANT_PRICE = gql`
-  mutation UpdateVariantPrice($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+  mutation UpdateVariantPrice(
+    $productId: ID!
+    $variants: [ProductVariantsBulkInput!]!
+  ) {
     productVariantsBulkUpdate(productId: $productId, variants: $variants) {
       productVariants {
         id
@@ -16,13 +19,20 @@ export const UPDATE_VARIANT_PRICE = gql`
   }
 `;
 
-export const UPDATE_VARIANT_PRICE_GBP = gql`
-  mutation UpdateVariantPriceGbp($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
-    productVariantsBulkUpdate(productId: $productId, variants: $variants) {
-      productVariants {
-        id
-        price
-        updatedAt
+export const PRICE_LIST_FIXED_PRICES_ADD = gql`
+  mutation PriceListFixedPricesAdd(
+    $priceListId: ID!
+    $prices: [PriceListPriceInput!]!
+  ) {
+    priceListFixedPricesAdd(priceListId: $priceListId, prices: $prices) {
+      prices {
+        variant {
+          id
+        }
+        price {
+          amount
+          currencyCode
+        }
       }
       userErrors {
         field
@@ -53,7 +63,9 @@ export const UPDATE_INVENTORY_ITEM_COST = gql`
 `;
 
 // Function to create a bulk inventory cost update mutation with aliased calls
-export function createBulkInventoryCostUpdate(items: Array<{ id: string; cost: string }>) {
+export function createBulkInventoryCostUpdate(
+  items: Array<{ id: string; cost: string }>
+) {
   const mutationFields = items
     .map((item, index) => {
       return `
@@ -75,7 +87,7 @@ export function createBulkInventoryCostUpdate(items: Array<{ id: string; cost: s
       }
     }`;
     })
-    .join('\n');
+    .join("\n");
 
   return gql`
     mutation BulkInventoryCostUpdate {

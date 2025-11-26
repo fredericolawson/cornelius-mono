@@ -2,13 +2,12 @@ import { GET_PRODUCTS } from "@/lib/graphql/queries";
 import { shopifyClient } from "@/lib/shopify-client";
 import { ProductTable } from "@/components/table/product-table";
 import { Product } from "@/types";
-import { convertFromUSD, convertToUSD } from "./actions/currency";
+import { convertToUSD } from "./actions/currency";
 
 export default async function ProductsPage() {
   const query = "status:ACTIVE";
   const response: any = await shopifyClient.request(GET_PRODUCTS, { query });
 
-  console.log(response.products.edges);
   const processedProducts = await processProducts(response.products.edges);
   const sortedProducts = sortProducts(processedProducts);
 
@@ -22,17 +21,13 @@ async function processProducts(products: any) {
       name: rawProduct.node.title.split(" | ")[0],
       type: rawProduct.node.productType,
       price: rawProduct.node.contextualPricing.maxVariantPricing.price.amount,
-      priceGbp: 0,
+      priceGbp:
+        rawProduct.node.contextualPricingGbp.maxVariantPricing.price.amount,
       currency:
         rawProduct.node.contextualPricing.maxVariantPricing.price.currencyCode,
       image: rawProduct.node.featuredMedia.preview.image.url,
       cost: rawProduct.node.variants.nodes[0].inventoryItem.unitCost?.amount,
     };
-    const { result: priceGbp } = await convertFromUSD({
-      usdAmount: product.price,
-      toCurrency: "GBP",
-    });
-    product.priceGbp = priceGbp || 0;
     product.cost = await getCost(product);
     return product as Product;
   });
