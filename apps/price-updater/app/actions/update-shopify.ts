@@ -1,6 +1,6 @@
 'use server';
 import { shopifyClient } from '@/lib/shopify-client';
-import { createBulkInventoryCostUpdate, UPDATE_INVENTORY_ITEM_COST, UPDATE_VARIANT_PRICE } from '@/lib/graphql/mutations';
+import { createBulkInventoryCostUpdate, UPDATE_INVENTORY_ITEM_COST, UPDATE_VARIANT_PRICE, UPDATE_VARIANT_PRICE_GBP } from '@/lib/graphql/mutations';
 import { GET_PRODUCT_VARIANTS } from '@/lib/graphql/queries';
 import { revalidatePath } from 'next/cache';
 
@@ -12,6 +12,26 @@ export async function updatePrice({ productId, price }: { productId: string; pri
   }));
 
   const data = await shopifyClient.request(UPDATE_VARIANT_PRICE, {
+    productId: `gid://shopify/Product/${productId}`,
+    variants: variantsUpdate,
+  });
+  revalidatePath('/');
+
+  const { productVariants, userErrors } = (data as any).productVariantsBulkUpdate;
+
+  return { productVariants, userErrors };
+}
+
+// ------------------------------------------------------------
+
+export async function updatePriceGbp({ productId, price }: { productId: string; price: string }) {
+  const variants = await getVariants(productId);
+  const variantsUpdate = variants.map((variant: any) => ({
+    id: variant.id,
+    price: price,
+  }));
+
+  const data = await shopifyClient.request(UPDATE_VARIANT_PRICE_GBP, {
     productId: `gid://shopify/Product/${productId}`,
     variants: variantsUpdate,
   });

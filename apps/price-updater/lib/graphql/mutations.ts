@@ -16,6 +16,22 @@ export const UPDATE_VARIANT_PRICE = gql`
   }
 `;
 
+export const UPDATE_VARIANT_PRICE_GBP = gql`
+  mutation UpdateVariantPriceGbp($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+    productVariantsBulkUpdate(productId: $productId, variants: $variants) {
+      productVariants {
+        id
+        price
+        updatedAt
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
 export const UPDATE_INVENTORY_ITEM_COST = gql`
   mutation UpdateInventoryItemCost($id: ID!, $input: InventoryItemInput!) {
     inventoryItemUpdate(id: $id, input: $input) {

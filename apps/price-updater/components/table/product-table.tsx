@@ -1,14 +1,22 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Table, TableCaption, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@workspace/ui/components/table';
-import { useState } from 'react';
-import { Button } from '@workspace/ui/components/button';
-import { Separator } from '@workspace/ui/components/separator';
-import Image from 'next/image';
-import { Product } from '@/types';
-import { Link } from 'lucide-react';
-import { UpdatePrice, UpdateCost } from './updaters';
+import React from "react";
+import {
+  Table,
+  TableCaption,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@workspace/ui/components/table";
+import { useState } from "react";
+import { Button } from "@workspace/ui/components/button";
+import { Separator } from "@workspace/ui/components/separator";
+import Image from "next/image";
+import { Product } from "@/types";
+import { Link } from "lucide-react";
+import { UpdatePrice, UpdateCost, UpdatePriceGbp } from "./updaters";
 
 export function ProductTable({ products }: { products: Product[] }) {
   const [normalise, setNormalise] = useState(false);
@@ -18,7 +26,7 @@ export function ProductTable({ products }: { products: Product[] }) {
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Products</h1>
         <Button variant="outline" onClick={() => setNormalise(!normalise)}>
-          {normalise ? 'Revert' : 'Normalise'}
+          {normalise ? "Revert" : "Normalise"}
         </Button>
       </div>
       <Separator />
@@ -31,6 +39,7 @@ export function ProductTable({ products }: { products: Product[] }) {
             <TableHead>Type</TableHead>
             <TableHead>Link</TableHead>
             <TableHead className="w-[80px]">GBP Price</TableHead>
+            <TableHead className="w-[80px]">New GBP Price</TableHead>
             <TableHead className="w-[80px]">USD Price</TableHead>
             <TableHead className="w-[80px]">New USD Price</TableHead>
             <TableHead className="w-[80px]">COGs %</TableHead>
@@ -40,7 +49,12 @@ export function ProductTable({ products }: { products: Product[] }) {
         </TableHeader>
         <TableBody>
           {Object.entries(groupedProducts).map(([type, typeProducts]) => (
-            <ProductGroup key={type} type={type} products={typeProducts} normalise={normalise} />
+            <ProductGroup
+              key={type}
+              type={type}
+              products={typeProducts}
+              normalise={normalise}
+            />
           ))}
         </TableBody>
       </Table>
@@ -48,30 +62,49 @@ export function ProductTable({ products }: { products: Product[] }) {
   );
 }
 
-function ProductRow({ product, normalise }: { product: any; normalise: boolean }) {
+function ProductRow({
+  product,
+  normalise,
+}: {
+  product: any;
+  normalise: boolean;
+}) {
   const margin = product.cost ? (product.cost / product.price) * 100 : 0;
 
   return (
     <TableRow key={product.id}>
       <TableCell>
-        <Image src={product.image} alt={product.name} width={50} height={50} className="rounded-md" />
+        <Image
+          src={product.image}
+          alt={product.name}
+          width={50}
+          height={50}
+          className="rounded-md"
+        />
       </TableCell>
       <TableCell className="font-medium">{product.name}</TableCell>
       <TableCell>{product.type}</TableCell>
       <TableCell>
         <Button variant="outline" asChild>
-          <a href={`https://admin.shopify.com/store/cornelia-james-ltd/products/${product.id}`} target="_blank" rel="noopener noreferrer">
+          <a
+            href={`https://admin.shopify.com/store/cornelia-james-ltd/products/${product.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Link className="h-4 w-4" /> View
           </a>
         </Button>
       </TableCell>
       <TableCell>£{Math.round(product.price * 0.745)}</TableCell>
+      <TableCell>
+        <UpdatePriceGbp product={product} normalise={normalise} />
+      </TableCell>
       <TableCell>${Math.round(product.price)}</TableCell>
       <TableCell>
         <UpdatePrice product={product} normalise={normalise} />
       </TableCell>
       <TableCell>{margin.toFixed(0)}%</TableCell>
-      <TableCell>${product.cost ? product.cost : '0.00'}</TableCell>
+      <TableCell>${product.cost ? product.cost : "0.00"}</TableCell>
       <TableCell>
         <UpdateCost product={product} />
       </TableCell>
@@ -80,10 +113,12 @@ function ProductRow({ product, normalise }: { product: any; normalise: boolean }
 }
 
 // Utility function to group products
-function groupProductsByType(products: Product[]): { [key: string]: Product[] } {
+function groupProductsByType(products: Product[]): {
+  [key: string]: Product[];
+} {
   return products.reduce(
     (groups, product) => {
-      const type = product.type || 'Other';
+      const type = product.type || "Other";
       if (!groups[type]) groups[type] = [];
       groups[type].push(product);
       return groups;
@@ -93,11 +128,19 @@ function groupProductsByType(products: Product[]): { [key: string]: Product[] } 
 }
 
 // Component for rendering a product group
-function ProductGroup({ type, products, normalise }: { type: string; products: Product[]; normalise: boolean }) {
+function ProductGroup({
+  type,
+  products,
+  normalise,
+}: {
+  type: string;
+  products: Product[];
+  normalise: boolean;
+}) {
   return (
     <React.Fragment>
       <TableRow className="bg-muted/30">
-        <TableCell colSpan={10} className="text-muted-foreground font-semibold">
+        <TableCell colSpan={11} className="text-muted-foreground font-semibold">
           {type} ({products.length} products)
         </TableCell>
       </TableRow>
