@@ -13,7 +13,7 @@ export default async function ProductsPage() {
 
   return <ProductTable products={sortedProducts} />;
 }
-
+//
 async function processProducts(products: any) {
   const mappedProducts = products.map(async (rawProduct: any) => {
     const product = {
