@@ -4,6 +4,8 @@ import { ProductTable } from "@/components/table/product-table";
 import { Product } from "@/types";
 import { convertToUSD } from "./actions/currency";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProductsPage() {
   const query = "status:ACTIVE";
   const response: any = await shopifyClient.request(GET_PRODUCTS, { query });
