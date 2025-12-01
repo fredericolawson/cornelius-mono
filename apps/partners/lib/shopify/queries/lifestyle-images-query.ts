@@ -1,3 +1,4 @@
+export const LIFESTYLE_IMAGES_QUERY = `
 query GetLifestyleImages {
   products(first: 250, query: "status:ACTIVE") {
     edges {
@@ -52,3 +53,5 @@ query GetLifestyleImages {
     }
   }
 }
+`
+

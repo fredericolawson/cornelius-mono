@@ -1,3 +1,4 @@
+export const PRODUCTS_QUERY = `
 query GetProducts {
   products(first: 200, sortKey: PRODUCT_TYPE, reverse: false, query: "status:ACTIVE") {
     edges {
@@ -72,3 +73,5 @@ query GetProducts {
     }
   }
 }
+`
+

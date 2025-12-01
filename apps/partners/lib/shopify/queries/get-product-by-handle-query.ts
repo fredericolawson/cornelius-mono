@@ -1,3 +1,4 @@
+export const GET_PRODUCT_BY_HANDLE_QUERY = `
 query GetProductByHandle($handle: String!) {
   productByHandle(handle: $handle) {
     id
@@ -42,3 +43,5 @@ query GetProductByHandle($handle: String!) {
     }
   }
 }
+`
+

@@ -1,3 +1,4 @@
+export const GET_PRODUCTS_HANDLES_QUERY = `
 query GetProductsHandles {
   products(
     first: 200, 
@@ -12,4 +13,5 @@ query GetProductsHandles {
     }
   }
 }
+`
 

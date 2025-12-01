@@ -1,10 +1,11 @@
-import type { Metadata } from "next"
-import "@workspace/ui/globals.css"
-import { Toaster } from "sonner"
-import { Navigation } from "@/components/shared/navigation"
-import { Analytics } from "@vercel/analytics/next"
+import type { Metadata } from "next";
+import "@workspace/ui/globals.css";
+import { Toaster } from "sonner";
+import { Navigation } from "@/components/shared/navigation";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://partners.corneliajames.com"),
   title: "Cornelia James for Partners",
   description: "Useful resources and assets for Cornelia James partners",
   openGraph: {
@@ -21,9 +22,13 @@ export const metadata: Metadata = {
       "Useful resources and assets for Cornelia James partners. See our product gallery, image gallery, product data, and brand guide.",
     images: ["/brand.jpg"],
   },
-}
+};
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className="antialiased bg-muted/50">
@@ -35,5 +40,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
       </body>
     </html>
-  )
+  );
 }

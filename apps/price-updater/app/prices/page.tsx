@@ -2,7 +2,7 @@ import { GET_PRODUCTS } from "@/lib/graphql/queries";
 import { shopifyClient } from "@/lib/shopify-client";
 import { ProductTable } from "@/app/prices/components/product-table";
 import { Product } from "@/types";
-import { convertToUSD } from "../lib/actions/currency";
+import { convertToUSD } from "@/lib/actions/currency";
 
 export const dynamic = "force-dynamic";
 

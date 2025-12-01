@@ -1,10 +1,10 @@
 import { createAdminApiClient } from "@shopify/admin-api-client"
 import type { LifestyleImage, ShopifyProduct } from "../../types/types.js"
 
-import PRODUCTS_QUERY from "./queries/products-query.gql"
-import GET_PRODUCT_BY_HANDLE_QUERY from "./queries/get-product-by-handle-query.gql"
-import GET_PRODUCTS_HANDLES_QUERY from "./queries/get-products-handles-query.gql"
-import GET_LIFESTYLE_IMAGES_QUERY from "./queries/lifestyle-images-query.gql"
+import { PRODUCTS_QUERY } from "./queries/products-query"
+import { GET_PRODUCT_BY_HANDLE_QUERY } from "./queries/get-product-by-handle-query"
+import { GET_PRODUCTS_HANDLES_QUERY } from "./queries/get-products-handles-query"
+import { LIFESTYLE_IMAGES_QUERY } from "./queries/lifestyle-images-query"
 
 let client: ReturnType<typeof createAdminApiClient> | null = null
 
@@ -61,7 +61,7 @@ export async function getProductsHandles() {
 }
 
 export async function getLifestyleImages(): Promise<LifestyleImage[]> {
-  const data = await adminRequest(GET_LIFESTYLE_IMAGES_QUERY)
+  const data = await adminRequest(LIFESTYLE_IMAGES_QUERY)
   const lifestyleImages: LifestyleImage[] = []
 
   data.products.edges.forEach((productEdge: any) => {
