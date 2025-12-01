@@ -90,3 +90,45 @@ export const GET_PRODUCTS = gql`
     }
   }
 `;
+
+export const GET_COLLECTIONS = gql`
+  query getCollections {
+    collections(first: 250, sortKey: UPDATED_AT, reverse: true) {
+      edges {
+        node {
+          id
+          title
+          description
+          updatedAt
+          image {
+            url
+          }
+          products(first: 250) {
+            nodes {
+              id
+              title
+              status
+              metafield(namespace: "custom", key: "category") {
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CATEGORY_METAOBJECTS = gql`
+  query getCategoryMetaobjects {
+    metaobjects(first: 250, type: "category") {
+      nodes {
+        id
+        fields {
+          key
+          value
+        }
+      }
+    }
+  }
+`;

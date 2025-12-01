@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { Footer } from "@/components/shared/footer";
+import { Navbar } from "@/components/shared/navbar";
 
 export const metadata: Metadata = {
   title: "Cornelia James Price Engine",
@@ -16,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-muted/50 min-h-svh flex flex-col">
+        <Navbar />
         <main className="mx-auto flex max-w-6xl flex-col items-center justify-center p-6">
           {children}
         </main>

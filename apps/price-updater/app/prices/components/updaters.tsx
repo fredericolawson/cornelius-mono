@@ -17,7 +17,7 @@ import {
   updateCost,
   updatePrice,
   updatePriceGbp,
-} from "@/app/actions/update-shopify";
+} from "@/lib/actions/update-shopify";
 import { toast } from "sonner";
 
 export function UpdatePrice({

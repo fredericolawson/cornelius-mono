@@ -19,7 +19,7 @@ import Link from "next/link";
 import { Link as LucideLink } from "lucide-react";
 import { UpdatePrice, UpdateCost, UpdatePriceGbp } from "./updaters";
 import { toast } from "sonner";
-import { updatePriceGbp } from "@/app/actions/update-shopify";
+import { updatePriceGbp } from "@/lib/actions/update-shopify";
 import { Spinner } from "@workspace/ui/components/spinner";
 import { Input } from "@workspace/ui/components/input";
 
