@@ -13,6 +13,7 @@ export default async function CollectionsPage() {
     shopifyClient.request(GET_COLLECTIONS),
     shopifyClient.request(GET_CATEGORY_METAOBJECTS),
   ]);
+  console.log(JSON.stringify(categoriesResponse.metaobjects.nodes, null, 2));
   const categoryMap = createCategoryMap(categoriesResponse.metaobjects.nodes);
   const collections = processCollections(
     collectionsResponse.collections.edges,
@@ -26,7 +27,6 @@ function createCategoryMap(rawMetaobjects: any[]): Map<string, string> {
   const categoryMap = new Map<string, string>();
 
   rawMetaobjects.forEach((metaobject: any) => {
-    console.log(metaobject);
     const nameField = metaobject.fields.find(
       (field: any) => field.key === "name"
     );

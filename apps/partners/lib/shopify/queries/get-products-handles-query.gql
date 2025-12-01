@@ -1,0 +1,15 @@
+query GetProductsHandles {
+  products(
+    first: 200, 
+    sortKey: TITLE, 
+    reverse: false, 
+    query: "status:ACTIVE"
+  ) {
+    edges {
+      node {
+        handle
+      }
+    }
+  }
+}
+

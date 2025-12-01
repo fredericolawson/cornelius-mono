@@ -1,0 +1,13 @@
+@import "@workspace/ui/globals.css";
+
+@import "tailwindcss";
+
+:root {
+  --accent: #000000;
+  --accent-foreground: #ffffff;
+}
+
+@theme inline {
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+}
