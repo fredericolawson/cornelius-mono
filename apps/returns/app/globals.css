@@ -1,0 +1,21 @@
+@import "@workspace/ui/globals.css";
+
+@font-face {
+  font-family: "Avenir Next LT Pro";
+  src: url("/fonts/AvenirNextLTPro-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ITC Caslon 224 Std";
+  src: url("/fonts/ITCCaslon224StdMedium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+:root {
+  --font-avenir: "Avenir Next LT Pro", sans-serif;
+  --font-caslon: "ITC Caslon 224 Std", serif;
+}
+
