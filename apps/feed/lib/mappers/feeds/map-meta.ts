@@ -1,16 +1,9 @@
 import { mapVariants } from "../map-variants";
 import { buildMetaXml } from "../../xml-builders/meta";
-
-type ProductsResponse = {
-  products: {
-    edges: Array<{
-      node: any;
-    }>;
-  };
-};
+import type { GetProductsVariantsQuery } from "@workspace/shopify/types";
 
 type MapMetaFeedParams = {
-  productsResponse: ProductsResponse;
+  productsResponse: GetProductsVariantsQuery;
   baseUrl: string;
   language: string;
 };
@@ -22,7 +15,7 @@ export function mapMetaFeed({
 }: MapMetaFeedParams): string {
   const variants = productsResponse.products.edges
     .map(({ node: productNode }) => {
-      return productNode.variants.edges.map(({ node: variantNode }: any) => {
+      return productNode.variants.edges.map(({ node: variantNode }) => {
         const baseFields = mapVariants({
           productNode,
           variantNode,

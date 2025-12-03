@@ -1,16 +1,9 @@
 import { mapVariants } from "../map-variants";
 import { buildLystXml } from "../../xml-builders/lyst";
-
-type ProductsResponse = {
-  products: {
-    edges: Array<{
-      node: any;
-    }>;
-  };
-};
+import type { GetProductsVariantsQuery } from "@workspace/shopify/types";
 
 type MapLystFeedParams = {
-  productsResponse: ProductsResponse;
+  productsResponse: GetProductsVariantsQuery;
   baseUrl: string;
   language: string;
 };
@@ -22,7 +15,7 @@ export function mapLystFeed({
 }: MapLystFeedParams): string {
   const variants = productsResponse.products.edges
     .map(({ node: productNode }) => {
-      return productNode.variants.edges.map(({ node: variantNode }: any) => {
+      return productNode.variants.edges.map(({ node: variantNode }) => {
         const baseFields = mapVariants({
           productNode,
           variantNode,

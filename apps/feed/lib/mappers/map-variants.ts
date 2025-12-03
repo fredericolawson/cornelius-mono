@@ -1,54 +1,10 @@
 import { titleCase } from "@workspace/ui/lib/utils";
+import type { GetProductsVariantsQuery } from "@workspace/shopify/types";
 
-type ProductNode = {
-  id: string;
-  title: string;
-  handle: string;
-  descriptionHtml: string;
-  productType: string;
-  translations: Array<{ key: string; value: string }>;
-  contextualPricing?: {
-    maxVariantPricing?: {
-      price?: {
-        amount: string;
-        currencyCode: string;
-      };
-    };
-  };
-  material?: {
-    reference?: {
-      displayName: string;
-    };
-  };
-  category?: {
-    references?: {
-      edges: Array<{
-        node: {
-          displayName: string;
-        };
-      }>;
-    };
-  };
-  sizing?: {
-    reference?: {
-      glove_length?: {
-        value: string;
-      };
-    };
-  };
-};
-
-type VariantNode = {
-  id: string;
-  sku: string;
-  availableForSale: boolean;
-  selectedOptions: Array<{ name: string; value: string }>;
-  image?: {
-    url: string;
-    altText?: string;
-  };
-  translations: Array<{ key: string; value: string }>;
-};
+// Extract types from the generated GraphQL query
+type ProductNode =
+  GetProductsVariantsQuery["products"]["edges"][number]["node"];
+type VariantNode = ProductNode["variants"]["edges"][number]["node"];
 
 type MapVariantsParams = {
   productNode: ProductNode;
@@ -57,12 +13,39 @@ type MapVariantsParams = {
   language: string;
 };
 
+type MapVariantsReturn = {
+  sku: string | null | undefined;
+  productName: string;
+  productTitle: string | null | undefined;
+  description: string | null | undefined;
+  color: string | null | undefined;
+  productType: string;
+  material: string | null | undefined;
+  category: string[] | undefined;
+  group: string | null | undefined;
+  sizeGroup: string | null | undefined;
+  length: string | null | undefined;
+  link: string;
+  image_link: string | null | undefined;
+  imageType: string;
+  price: string | null | undefined;
+  currency: string | null | undefined;
+  availability: string;
+  size: string | null | undefined;
+  productId: string;
+  variantId: string;
+  handle: string;
+  brand: string;
+  gender: string;
+  ageGroup: string;
+};
+
 export function mapVariants({
   productNode,
   variantNode,
   baseUrl,
   language,
-}: MapVariantsParams) {
+}: MapVariantsParams): MapVariantsReturn {
   const productId = productNode?.id?.replace("gid://shopify/Product/", "");
   const variantId = variantNode?.id?.replace(
     "gid://shopify/ProductVariant/",
@@ -75,8 +58,9 @@ export function mapVariants({
     language === "en"
       ? variantNode.selectedOptions.find((option) => option.name === "Colour")
           ?.value
-      : variantNode.translations.find((translation) => translation.key === "option1")
-          ?.value;
+      : variantNode.translations.find(
+          (translation) => translation.key === "option1"
+        )?.value;
 
   const productType =
     language === "en"
@@ -85,8 +69,14 @@ export function mapVariants({
           (translation) => translation.key === "product_type"
         )?.value;
 
+  let productName = productNode.title || "";
+  if (productName.includes(" | ")) {
+    productName = productName.split(" | ")[0]?.trim() || productName;
+  }
+
   return {
     sku: variantNode.sku,
+    productName,
     productTitle:
       language === "en"
         ? productNode.title
@@ -101,16 +91,16 @@ export function mapVariants({
           )?.value,
     color,
     productType: titleCase(productType || ""),
-    material: productNode.material?.reference?.displayName,
-    category: productNode.category?.references?.edges?.map(
-      (edge) => edge.node.displayName
-    ),
+    material: productNode.material?.reference?.title?.value,
+    category: productNode.category?.references?.edges
+      ?.map((edge) => edge.node?.displayName)
+      .filter((name): name is string => name !== null && name !== undefined),
+    group: productNode.material?.reference?.group?.value,
+    sizeGroup: productNode.sizing?.reference?.size_group?.value,
     length: productNode.sizing?.reference?.glove_length?.value,
     link: `${baseUrl}/${productNode.handle}?variant=${variantId}`,
     image_link: variantNode?.image?.url,
-    imageType: variantNode.image?.altText
-      ?.toLowerCase()
-      .includes("lifestyle")
+    imageType: variantNode.image?.altText?.toLowerCase().includes("lifestyle")
       ? "Lifestyle"
       : "Flatlay",
     price: productNode.contextualPricing?.maxVariantPricing?.price?.amount,
@@ -126,4 +116,3 @@ export function mapVariants({
     ageGroup: "Adult",
   };
 }
-

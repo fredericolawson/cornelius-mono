@@ -1,16 +1,9 @@
 import { mapVariants } from "../map-variants";
 import { buildGoogleShoppingXml } from "../../xml-builders/google";
-
-type ProductsResponse = {
-  products: {
-    edges: Array<{
-      node: any;
-    }>;
-  };
-};
+import type { GetProductsVariantsQuery } from "@workspace/shopify/types";
 
 type MapGoogleFeedParams = {
-  productsResponse: ProductsResponse;
+  productsResponse: GetProductsVariantsQuery;
   baseUrl: string;
   country: string;
   language: string;
@@ -24,7 +17,7 @@ export function mapGoogleShoppingFeed({
 }: MapGoogleFeedParams): string {
   const variants = productsResponse.products.edges
     .map(({ node: productNode }) => {
-      return productNode.variants.edges.map(({ node: variantNode }: any) => {
+      return productNode.variants.edges.map(({ node: variantNode }) => {
         const baseFields = mapVariants({
           productNode,
           variantNode,
@@ -32,10 +25,10 @@ export function mapGoogleShoppingFeed({
           language,
         });
         const productId = baseFields.productId;
-
+        // -
         return {
           "g:id": `shopify_${country}_${productId}_${baseFields.variantId}`,
-          "g:title": `${baseFields.productType} - ${baseFields.productTitle} - ${baseFields.color} - Cornelia James`,
+          "g:title": `${baseFields.productName} ${baseFields.material} ${baseFields.group} - ${baseFields.color} ${baseFields.sizeGroup} ${baseFields.group} - ${baseFields.productType} by Cornelia James`,
           "g:description": baseFields.description,
           "g:link": baseFields.link,
           "g:image_link": baseFields.image_link,
@@ -68,4 +61,3 @@ export function mapGoogleShoppingFeed({
 function mapGoogleProductCategory(productType: string): string {
   return productType.includes("Gloves") ? "170" : "177";
 }
-

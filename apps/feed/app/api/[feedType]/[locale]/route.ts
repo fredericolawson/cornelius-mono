@@ -21,7 +21,7 @@ export async function GET(
     else localeFormatted = locale + "/";
 
     const localeParts = locale.split("-");
-    const country = (localeParts[1]?.toUpperCase() || "GB");
+    const country = localeParts[1]?.toUpperCase() || "GB";
     const language = localeParts[0] || "en";
     const baseUrl = `https://www.corneliajames.com/${localeFormatted}products`;
 
@@ -58,4 +58,3 @@ export async function GET(
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
-

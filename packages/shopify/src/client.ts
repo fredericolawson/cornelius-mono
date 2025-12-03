@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import { GET_PRODUCTS_VARIANTS_QUERY } from "./queries/get-products-variants";
+import { GET_PRODUCTS_VARIANTS_QUERY, type GetProductsVariantsQuery } from "./queries/get-products-variants";
 
 export const shopifyClient = new GraphQLClient(
   `https://${process.env.SHOPIFY_STORE_DOMAIN}/admin/api/2025-10/graphql.json`,
@@ -23,8 +23,8 @@ export async function getProductsVariants({
 }: {
   language: string;
   country: string;
-}) {
-  return adminRequest(GET_PRODUCTS_VARIANTS_QUERY, {
+}): Promise<GetProductsVariantsQuery> {
+  return adminRequest<GetProductsVariantsQuery>(GET_PRODUCTS_VARIANTS_QUERY, {
     language,
     country,
   });

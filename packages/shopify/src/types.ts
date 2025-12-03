@@ -285,3 +285,6 @@ export type StoreCreditInput = {
   }
 }
 
+// Export generated types from GraphQL queries
+export type { GetProductsVariantsQuery, GetProductsVariantsQueryVariables } from './queries/get-products-variants'
+

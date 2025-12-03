@@ -1,4 +1,9 @@
-export const GET_PRODUCTS_VARIANTS_QUERY = `
+import type {
+  GetProductsVariantsQuery,
+  GetProductsVariantsQueryVariables,
+} from "../types/generated/admin.generated";
+
+export const GET_PRODUCTS_VARIANTS_QUERY = `#graphql
   query getProductsVariants(
     $nProducts: Int = 250
     $nVariants: Int = 250
@@ -29,7 +34,13 @@ export const GET_PRODUCTS_VARIANTS_QUERY = `
           material: metafield(namespace: "custom", key: "material") {
             reference {
               ... on Metaobject {
-                displayName
+                displayName,
+                title: field(key: "title") {
+                  value
+                },
+                group: field(key: "group") {
+                  value
+                }
               }
             }
           }
@@ -48,6 +59,9 @@ export const GET_PRODUCTS_VARIANTS_QUERY = `
             reference {
               ... on Metaobject {
                 glove_length: field(key: "glove_length") {
+                  value
+                },
+                size_group: field(key: "group") {
                   value
                 }
               }
@@ -81,3 +95,4 @@ export const GET_PRODUCTS_VARIANTS_QUERY = `
   }
 `;
 
+export type { GetProductsVariantsQuery, GetProductsVariantsQueryVariables };
